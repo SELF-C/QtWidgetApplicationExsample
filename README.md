@@ -1,0 +1,2 @@
+# QtWidgetApplicationExsample
+QtWidgetApplicationのサンプルコード

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "glwidget.h"
+#include "glwidget_1_1.h"
+#include "glwidget_2_0.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -9,7 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->resize(500,500);
 
-    auto glwidget = new GLWidget(this);
+    auto glwidget = new GLWidget_1_1(this);
+    //auto glwidget = new GLWidget_2_0(this);
+
+
     this->setCentralWidget(glwidget);
 
 }

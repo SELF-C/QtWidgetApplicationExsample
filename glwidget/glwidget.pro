@@ -16,14 +16,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    glwidget.cpp \
+    glwidget_1_1.cpp \
+    glwidget_2_0.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    model_1_1.cpp \
+    model_2_0.cpp
 
 HEADERS += \
-    glwidget.h \
+    camera_1_1.h \
+    fps.h \
+    glwidget_1_1.h \
+    glwidget_2_0.h \
     mainwindow.h \
-    shaderprogram.h
+    model_1_1.h \
+    model_2_0.h \
+    shaderprogram.h \
+    stl.h
 
 FORMS += \
     mainwindow.ui
@@ -33,3 +42,11 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+INCLUDEPATH += \
+    $$PWD/include \
+
+DISTFILES += \
+    shader.vert
+
+RESOURCES += \
+    resource.qrc

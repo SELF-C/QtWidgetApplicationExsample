@@ -56,6 +56,7 @@ void Model_1_1::load(const QString filename)
     }
 
     m_vertices.clear();
+    m_normals.clear();
     for(int i = 0; i < triangles.count(); i++)
     {
         auto pos = triangles.at(i).position1;

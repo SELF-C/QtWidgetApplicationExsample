@@ -25,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     camera_1_1.h \
+    camera_2_0.h \
     fps.h \
     glwidget_1_1.h \
     glwidget_2_0.h \

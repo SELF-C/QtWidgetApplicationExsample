@@ -60,7 +60,7 @@ void GLWidget_1_1::paintGL()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // カメラを回転
+    // View
     glm::mat4 cameraMatrix = m_camera->matrix();
 
     glm::vec3 eye    = cameraMatrix * glm::vec4(0.0f, 0.0f, m_camera->distance(), 1.0f);    // 仮想3Dカメラが配置されているポイント
@@ -88,7 +88,6 @@ void GLWidget_1_1::mouseMoveEvent(QMouseEvent *event)
     // マウスの右クリックドラッグでカメラ回転
     if (event->buttons() & Qt::RightButton)
     {
-        /* カメラの回転量をマウスの移動量から設定 */
         m_camera->angleLimit(glm::vec2(event->x() - m_mousePosition.x, event->y() - m_mousePosition.y));
         update();
     }

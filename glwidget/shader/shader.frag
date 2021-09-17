@@ -1,9 +1,9 @@
 #version 110 core
 
-varying vec3 qt_Color;
+varying vec3 LightIntensity;
 
 void main(void)
 {
-    //gl_FragColor = gl_Color;
-    gl_FragColor = vec4( qt_Color, 1.0 );
+    gl_FragColor = vec4(LightIntensity, 1.0f);
+    //gl_FragColor = vec4(1,1,1, 1.0f);
 }

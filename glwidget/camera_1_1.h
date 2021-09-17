@@ -25,26 +25,28 @@ public:
 
     void angleLimit(glm::vec2 delta)
     {
-        m_angle -= delta;
+        const float sensitivity = 1.0f;
+        const int xmin =0, xmax=360, ymin = -90, ymax = 90;
+        m_angle -= delta * sensitivity;
 
         // x rotation range
-        if (m_angle.x > 360)
+        if (m_angle.x > xmax)
         {
-            m_angle.x = 0;
+            m_angle.x = xmin;
         }
-        else if (m_angle.x < 0)
+        else if (m_angle.x < xmin)
         {
-            m_angle.x =  360;
+            m_angle.x = xmax;
         }
 
         // y rotation range
-        if (m_angle.y < -90)
+        if (m_angle.y < ymin)
         {
-            m_angle.y = -90;
+            m_angle.y = ymin;
         }
-        else if (m_angle.y > 90)
+        else if (m_angle.y > ymax)
         {
-            m_angle.y = 90;
+            m_angle.y = ymax;
         }
     }
 

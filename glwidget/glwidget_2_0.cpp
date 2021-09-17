@@ -10,13 +10,12 @@ void GLWidget_2_0::initializeGL()
     initializeOpenGLFunctions();
 
     //shader init
-    m_shader = ShaderProgram().addShaderFromSourceFile(":/shader.vert", ":/shader.frag");
+    m_shader = ShaderProgram().addShaderFromSourceFile(":/shader/shader.vert", ":/shader/shader.frag");
 
     m_model = new Model_2_0();
-    m_model->load(":/cube.stl");
+    m_model->load(":/stl/suzanne.stl");
 
-    m_camera.angle = QVector2D(20.0, -20.0);
-    m_camera.distance = 2.5f;
+    m_camera = new Camera_2_0();
 
     // clear
     glClearColor(0,0,0,1);
@@ -44,75 +43,49 @@ void GLWidget_2_0::paintGL()
 
     glUseProgram(m_shader);
 
-    // view
-    QMatrix4x4 cameraMatrix;  // カメラを原点に沿って回転させる
-    cameraMatrix.rotate(m_camera.angle.x(), QVector3D(0.0f, 1.0f, 0.0f));
-    cameraMatrix.rotate(m_camera.angle.y(), QVector3D(1.0f, 0.0f, 0.0f));
-
-    auto eye    = cameraMatrix * QVector3D(0.0f, 0.0f, m_camera.distance);   // 仮想3Dカメラが配置されているポイント
-    auto center = cameraMatrix * QVector3D(0.0f, 0.0f, 0.0f);               // カメラが注視するポイント（シーンの中心）
-    auto up     = cameraMatrix * QVector3D(0.0f, 1.0f, 0.0f);               // 3Dワールドの上方向を定義
+    // View
+    QMatrix4x4 cameraMatrix = m_camera->matrix();
+    auto eye    = cameraMatrix * QVector3D(0.0f, 0.0f, m_camera->distance());   // 仮想3Dカメラが配置されているポイント
+    auto center = cameraMatrix * QVector3D(0.0f, 0.0f, 0.0f);                   // カメラが注視するポイント（シーンの中心）
+    auto up     = cameraMatrix * QVector3D(0.0f, 1.0f, 0.0f);                   // 3Dワールドの上方向を定義
 
     m_viewMatrix.setToIdentity();
     m_viewMatrix.lookAt(eye, center, up);
 
-    // draw call
-    m_model->draw(m_shader, m_projectionMatrix, m_viewMatrix);
+    // Draw Call
+    m_model->update(m_projectionMatrix, m_viewMatrix);
+    m_model->draw(m_shader);
 
-    update();
 }
 
 void GLWidget_2_0::mousePressEvent(QMouseEvent *event)
 {
-    m_mousePosition = event->pos();
+    m_mousePosition = QVector2D(event->pos());
     event->accept();
 }
 
 void GLWidget_2_0::mouseMoveEvent(QMouseEvent *event)
 {
-    /* カメラの回転量をマウスの移動量から設定 */
-    int deltaX = event->x() - m_mousePosition.x();
-    int deltaY = event->y() - m_mousePosition.y();
+    auto eventPos = QVector2D(event->pos());
 
     // マウスの右クリックドラッグでカメラ回転
-    if (event->buttons() & Qt::RightButton) {
-        /* カメラのX方向への回転角度制限 */
-        m_camera.angle.setX(m_camera.angle.x() - deltaX);
-        if (m_camera.angle.x() < 0)
-            m_camera.angle.setX(m_camera.angle.x() + 360);
-
-        if (m_camera.angle.x() >= 360)
-            m_camera.angle.setX(m_camera.angle.x() - 360);
-
-        /* カメラのY方向への回転角度制限 */
-        m_camera.angle.setY(m_camera.angle.y() - deltaY);
-        if (m_camera.angle.y() < -90)
-            m_camera.angle.setY(-90);
-
-        if (m_camera.angle.y() > 90)
-            m_camera.angle.setY(90);
+    if (event->buttons() & Qt::RightButton)
+    {
+        m_camera->angleLimit(eventPos - m_mousePosition);
+        update();
     }
-    m_mousePosition = event->pos();
+    m_mousePosition = eventPos;
 
     event->accept();
-
-    update();
 }
 
 void GLWidget_2_0::wheelEvent(QWheelEvent *event)
 {
     /* マウスホイールでカメラの奥行きの移動量を設定 */
-    float delta = event->delta();
     if (event->orientation() == Qt::Vertical) {
-        if (delta < 0) {
-            m_camera.distance *= 1.1f;
-        }
-        else if (delta > 0)
-        {
-            m_camera.distance *= 0.9f;
-        }
+        m_camera->depth(event->delta());
+        update();
     }
-    event->accept();
 
-    update();
+    event->accept();
 }

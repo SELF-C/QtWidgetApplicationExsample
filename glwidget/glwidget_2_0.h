@@ -14,6 +14,7 @@
 
 #include "shaderprogram.h"
 #include "model_2_0.h"
+#include "camera_2_0.h"
 
 class GLWidget_2_0  : public QGLWidget, protected QOpenGLFunctions_2_0
 {
@@ -30,19 +31,13 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 private:
-    struct Camera
-    {
-        QVector2D angle;
-        float distance;
-    };
-
     GLuint m_shader;
     QMatrix4x4 m_projectionMatrix, m_viewMatrix;
 
-    QPoint m_mousePosition;
-    Camera m_camera;
+    QVector2D m_mousePosition;
 
     Model_2_0* m_model;
+    Camera_2_0* m_camera;
 
 };
 

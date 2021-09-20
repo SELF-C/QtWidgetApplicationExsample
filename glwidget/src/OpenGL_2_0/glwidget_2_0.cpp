@@ -15,7 +15,7 @@ void GLWidget_2_0::initializeGL()
     m_model = new Model_2_0();
     m_model->load(":/stl/suzanne.stl");
 
-    m_camera = new Camera_2_0();
+    m_camera = new Camera_qt();
 
     // clear
     glClearColor(0,0,0,1);

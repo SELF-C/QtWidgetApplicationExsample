@@ -5,10 +5,10 @@
 #include <QVector3D>
 #include <QMatrix4x4>
 
-class Camera_2_0
+class Camera_qt
 {
 public:
-    Camera_2_0(QVector2D angle = QVector2D(0,0), float distance = 5) {
+    Camera_qt(QVector2D angle = QVector2D(0,0), float distance = 5) {
         m_angle = angle;
         m_distance = distance;
     }

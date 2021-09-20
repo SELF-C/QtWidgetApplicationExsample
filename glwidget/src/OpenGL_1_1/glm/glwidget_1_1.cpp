@@ -1,4 +1,4 @@
-#include "glwidget_1_1.h"
+﻿#include "glwidget_1_1.h"
 
 GLWidget_1_1::GLWidget_1_1(QWidget *parent) : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
 {
@@ -18,7 +18,7 @@ void GLWidget_1_1::initializeGL()
     m_model = new Model_1_1();
     m_model->load(":/stl/suzanne.stl");
 
-    m_camera = new Camera_1_1();
+    m_camera = new Camera_glm();
 
     m_angle = glm::vec3(0.0f, 0.0f, 0.0f);
 

@@ -21,7 +21,7 @@
 
 // others
 #include "model_1_1.h"
-#include "camera_1_1.h"
+#include "camera_glm.h"
 #include "fps.h"
 
 class GLWidget_1_1 : public QGLWidget, protected QOpenGLFunctions_1_1
@@ -42,7 +42,7 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
-    Camera_1_1* m_camera;
+    Camera_glm* m_camera;
     Model_1_1* m_model;
 
     glm::mat4 m_viewMatrix;

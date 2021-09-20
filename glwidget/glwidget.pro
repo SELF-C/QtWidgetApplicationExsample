@@ -16,23 +16,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    glwidget_1_1.cpp \
-    glwidget_2_0.cpp \
     main.cpp \
     mainwindow.cpp \
-    model_1_1.cpp \
-    model_2_0.cpp
+    src/OpenGL_1_1/glm/glwidget_1_1.cpp \
+    src/OpenGL_1_1/glm/model_1_1.cpp \
+    src/OpenGL_1_1/qt/glwidget_1_1.cpp \
+    src/OpenGL_1_1/qt/model_1_1.cpp \
+    src/OpenGL_2_0/glwidget_2_0.cpp \
+    src/OpenGL_2_0/model_2_0.cpp
 
 HEADERS += \
-    camera_1_1.h \
-    camera_2_0.h \
-    fps.h \
-    glwidget_1_1.h \
-    glwidget_2_0.h \
     mainwindow.h \
-    model_1_1.h \
-    model_2_0.h \
-    shaderprogram.h \
+    src/OpenGL_1_1/glm/glwidget_1_1.h \
+    src/OpenGL_1_1/glm/model_1_1.h \
+    src/OpenGL_1_1/qt/glwidget_1_1.h \
+    src/OpenGL_1_1/qt/model_1_1.h \
+    src/OpenGL_2_0/ShaderProgram.h \
+    src/OpenGL_2_0/glwidget_2_0.h \
+    src/OpenGL_2_0/model_2_0.h \
+    src/camera_glm.h \
+    src/camera_qt.h \
+    src/fps.h \
+    src/stl.h \
     stl.h
 
 FORMS += \
@@ -45,6 +50,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 INCLUDEPATH += \
     $$PWD/include \
+    $$PWD/src
 
 DISTFILES += \
     shader.vert

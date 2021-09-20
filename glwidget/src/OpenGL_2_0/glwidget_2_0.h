@@ -12,9 +12,9 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 
-#include "shaderprogram.h"
+#include "OpenGL_2_0/ShaderProgram.h"
 #include "model_2_0.h"
-#include "camera_2_0.h"
+#include "camera_qt.h"
 
 class GLWidget_2_0  : public QGLWidget, protected QOpenGLFunctions_2_0
 {
@@ -37,7 +37,7 @@ private:
     QVector2D m_mousePosition;
 
     Model_2_0* m_model;
-    Camera_2_0* m_camera;
+    Camera_qt* m_camera;
 
 };
 

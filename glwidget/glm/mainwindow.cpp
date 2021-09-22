@@ -1,11 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "OpenGL_1_1/qt/glwidget_1_1.h"
-//#include "OpenGL_1_1/glm/glwidget_1_1.h"
-#include "OpenGL_2_0/glwidget_2_0.h"
+#include "glwidget_1_1.h"
+#include "glwidget_2_0.h"
 
-#define GL_VER_1_1
+//#define GL_VER_1_1
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

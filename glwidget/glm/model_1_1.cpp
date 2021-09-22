@@ -8,10 +8,10 @@ Model_1_1::Model_1_1()
 
 void Model_1_1::initialize()
 {
-    m_color     = glm::vec4(1, 1, 1, 1);
-    m_position  = glm::vec3(0, 0, 0);
-    m_angle     = glm::vec3(0, 0, 0);
-    m_size      = glm::vec3(1, 1, 1);
+    m_color     = glm::vec4(1);
+    m_position  = glm::vec3(0);
+    m_angle     = glm::vec3(0);
+    m_size      = glm::vec3(1);
 }
 
 void Model_1_1::update(glm::mat4 viewMatrix)
@@ -59,19 +59,13 @@ void Model_1_1::load(const QString filename)
     m_normals.clear();
     for(int i = 0; i < triangles.count(); i++)
     {
-        auto pos = triangles.at(i).position1;
-        m_vertices.append(glm::vec3(pos.x(), pos.y(), pos.z()));
+        m_vertices.append(triangles.at(i).position1);
+        m_vertices.append(triangles.at(i).position2);
+        m_vertices.append(triangles.at(i).position3);
 
-        pos = triangles.at(i).position2;
-        m_vertices.append(glm::vec3(pos.x(), pos.y(), pos.z()));
-
-        pos = triangles.at(i).position3;
-        m_vertices.append(glm::vec3(pos.x(), pos.y(), pos.z()));
-
-        pos = triangles.at(i).normal;
-        m_normals.append(glm::vec3(pos.x(), pos.y(), pos.z()));
-        m_normals.append(glm::vec3(pos.x(), pos.y(), pos.z()));
-        m_normals.append(glm::vec3(pos.x(), pos.y(), pos.z()));
+        m_normals.append(triangles.at(i).normal);
+        m_normals.append(triangles.at(i).normal);
+        m_normals.append(triangles.at(i).normal);
     }
 }
 

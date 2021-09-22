@@ -1,22 +1,27 @@
-#ifndef GLWIDGET_1_1_H
-#define GLWIDGET_1_1_H
+#ifndef GLWIDGET_H
+#define GLWIDGET_H
 
 // Qt
 #include <QGLWidget>
 #include <QOpenGLFunctions_1_1>
-#include <QtMath>
 #include <QVector>
-#include <QVector2D>
 #include <QVector3D>
-#include <QVector4D>
-#include <QMatrix4x4>
 #include <QMouseEvent>
 #include <QWheelEvent>
 
+// glm
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/scalar_constants.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 // others
 #include "model_1_1.h"
-#include "camera_qt.h"
-#include "fps.h"
+#include "camera.h"
 
 class GLWidget_1_1 : public QGLWidget, protected QOpenGLFunctions_1_1
 {
@@ -36,13 +41,13 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
-    Camera_qt * m_camera;
+    Camera* m_camera;
     Model_1_1* m_model;
 
-    QMatrix4x4 m_viewMatrix;
+    glm::mat4 m_viewMatrix;
 
-    QVector3D m_angle;
-    QVector2D m_mousePosition;
+    glm::vec3 m_angle;
+    glm::vec2 m_mousePosition;
 };
 
-#endif // GLWIDGET_1_1_H
+#endif // GLWIDGET_H

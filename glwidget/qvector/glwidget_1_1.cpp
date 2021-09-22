@@ -1,4 +1,4 @@
-﻿#include "glwidget_1_1.h"
+#include "glwidget_1_1.h"
 
 GLWidget_1_1::GLWidget_1_1(QWidget *parent) : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
 {
@@ -18,9 +18,9 @@ void GLWidget_1_1::initializeGL()
     m_model = new Model_1_1();
     m_model->load(":/stl/suzanne.stl");
 
-    m_camera = new Camera_glm();
+    m_camera = new Camera();
 
-    m_angle = glm::vec3(0.0f, 0.0f, 0.0f);
+    m_angle = QVector3D(0.0f, 0.0f, 0.0f);
 
     glClearColor(0,0,0,1);
 
@@ -29,8 +29,8 @@ void GLWidget_1_1::initializeGL()
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 
-    glm::vec4 lightPosition = glm::vec4(0.5f, 5.0f, 7.0f, 1.0f );
-    glLightfv(GL_LIGHT0, GL_POSITION, glm::value_ptr(lightPosition));
+    float lightPosition[] = { 0.5f, 5.0f, 7.0f, 1.0f };
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
     glShadeModel(GL_FLAT);
 }
@@ -46,8 +46,9 @@ void GLWidget_1_1::resizeGL(int w, int h)
     const GLfloat aspect = static_cast<GLfloat>(w) / static_cast<GLfloat>(h);
     const GLfloat zNear = 0.01f, zFar = 1000.0f, fov = 45.0f;
 
-    glm::mat4 projection = glm::perspective(glm::radians(fov), aspect, zNear, zFar);
-    glLoadMatrixf(glm::value_ptr(projection));
+    QMatrix4x4 projection;
+    projection.perspective(fov, aspect, zNear, zFar);
+    glLoadMatrixf(projection.constData());
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -61,14 +62,14 @@ void GLWidget_1_1::paintGL()
     glLoadIdentity();
 
     // View
-    glm::mat4 cameraMatrix = m_camera->matrix();
+    QMatrix4x4 cameraMatrix = m_camera->matrix();
 
-    glm::vec3 eye    = cameraMatrix * glm::vec4(0.0f, 0.0f, m_camera->distance(), 1.0f);    // 仮想3Dカメラが配置されているポイント
-    glm::vec3 center = cameraMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);                    // カメラが注視するポイント（シーンの中心）
-    glm::vec3 up     = cameraMatrix * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);                    // 3Dワールドの上方向を定義
-    glm::mat4 viewMatrix = glm::lookAt(eye, center, up);
+    QVector3D eye    = cameraMatrix * QVector3D(0.0f, 0.0f, m_camera->distance());    // 仮想3Dカメラが配置されているポイント
+    QVector3D center = cameraMatrix * QVector3D(0.0f, 0.0f, 0.0f);                    // カメラが注視するポイント（シーンの中心）
+    QVector3D up     = cameraMatrix * QVector3D(0.0f, 1.0f, 0.0f);                    // 3Dワールドの上方向を定義
 
-    m_model->setRotate(m_angle);
+    QMatrix4x4 viewMatrix;
+    viewMatrix.lookAt(eye, center, up);
 
     // Draw Call
     m_model->update(viewMatrix);
@@ -79,7 +80,7 @@ void GLWidget_1_1::paintGL()
 
 void GLWidget_1_1::mousePressEvent(QMouseEvent *event)
 {
-    m_mousePosition = glm::vec2(event->pos().x(), event->pos().y());
+    m_mousePosition = QVector2D(event->pos());
     event->accept();
 }
 
@@ -88,10 +89,11 @@ void GLWidget_1_1::mouseMoveEvent(QMouseEvent *event)
     // マウスの右クリックドラッグでカメラ回転
     if (event->buttons() & Qt::RightButton)
     {
-        m_camera->angleLimit(glm::vec2(event->x() - m_mousePosition.x, event->y() - m_mousePosition.y));
+        QVector2D(event->pos()) - m_mousePosition;
+        m_camera->angleLimit(QVector2D(event->pos()) - m_mousePosition);
         update();
     }
-    m_mousePosition = glm::vec2(event->pos().x(), event->pos().y());
+    m_mousePosition = QVector2D(event->pos());
 
     event->accept();
 }
@@ -116,37 +118,37 @@ bool GLWidget_1_1::eventFilter(QObject *obj, QEvent *event)
         // 回転操作
         if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_A)
         {
-            m_angle.y--;
-            if ( m_angle.y < 0) m_angle.y = 360;
+            m_angle.setY(m_angle.y() - 1);
+            if ( m_angle.y() < 0) m_angle.setY( 360 );
         }
 
         if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_D)
         {
-            m_angle.y++;
-            if ( m_angle.y > 360) m_angle.y = 0;
+            m_angle.setY(m_angle.y() + 1);
+            if ( m_angle.y() > 360) m_angle.setY( 0 );
         }
 
         if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_W)
         {
-            m_angle.x--;
-            if ( m_angle.x < 0) m_angle.x = 360;
+            m_angle.setX(m_angle.x() - 1);
+            if ( m_angle.x() < 0) m_angle.setX( 360 );
         }
 
         if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_S)
         {
-            m_angle.x++;
-            if ( m_angle.x > 360) m_angle.x = 0;
+            m_angle.setX(m_angle.x() + 1);
+            if ( m_angle.x() > 360) m_angle.setX( 0 );
         }
 
         if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Q)
         {
-            m_angle.z--;
-            if ( m_angle.z < 0) m_angle.z = 360;
+            m_angle.setZ(m_angle.x() - 1);
+            if ( m_angle.z() < 0) m_angle.setZ( 360 );
         }
         if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_E)
         {
-            m_angle.z++;
-            if ( m_angle.z > 360) m_angle.z = 0;
+            m_angle.setZ(m_angle.z() + 1);
+            if ( m_angle.z() > 360) m_angle.setZ( 0 );
         }
 
         update();

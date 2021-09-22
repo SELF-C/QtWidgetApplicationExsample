@@ -1,14 +1,14 @@
-#ifndef CAMERA_GLM_H
-#define CAMERA_GLM_H
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <glm/vec2.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
-class Camera_glm
+class Camera
 {
 public:
-    Camera_glm(glm::vec2 angle = glm::vec2(0,0), float distance = 5) {
+    Camera(glm::vec2 angle = glm::vec2(0,0), float distance = 5) {
         m_angle = angle;
         m_distance = distance;
     }
@@ -71,4 +71,4 @@ private:
     float m_distance;
 };
 
-#endif // CAMERA_GLM_H
+#endif // CAMERA_H

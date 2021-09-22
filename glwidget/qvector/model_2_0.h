@@ -13,13 +13,13 @@
 class Model_2_0 : protected QOpenGLFunctions_2_0
 {
 public:
-    explicit Model_2_0();
+    explicit Model_2_0(const QString filename);
     void update(QMatrix4x4 projectionMatrix, QMatrix4x4 viewMatrix);
     void draw(GLuint m_shader);
-    void load(const QString filename);
     void setTranslate(QVector3D position);
     void setRotate(QVector3D angle);
     void setScale(QVector3D size);
+    void setLightPosition(QVector4D v);
 
 protected:
     void initialize();
@@ -45,10 +45,18 @@ private:
     };
     Light m_light;
 
+
     QMatrix4x4 m_projectionMatrix, m_viewMatrix, m_modelMatrix;
     QVector<QVector3D> m_vertices, m_normals;
+    QVector<GLuint> m_indexes;
     QVector3D m_position, m_angle, m_size;
 
+    GLuint m_vbo[2];
+    GLuint m_ibo;
+
+    void load(const QString filename);
+    void createBuffer();
+    bool findVertex(QVector3D vertice, QVector3D normal);
 
 };
 

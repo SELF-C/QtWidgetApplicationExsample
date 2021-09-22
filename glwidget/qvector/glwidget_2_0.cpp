@@ -12,10 +12,8 @@ void GLWidget_2_0::initializeGL()
     //shader init
     m_shader = ShaderProgram().addShaderFromSourceFile(":/shader/shader.vert", ":/shader/shader.frag");
 
-    m_model = new Model_2_0();
-    m_model->load(":/stl/suzanne.stl");
-
-    m_camera = new Camera_qt();
+    m_model = new Model_2_0(":/stl/suzanne.stl");
+    m_camera = new Camera();
 
     // clear
     glClearColor(0,0,0,1);
@@ -24,6 +22,8 @@ void GLWidget_2_0::initializeGL()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnable(GL_MULTISAMPLE);
+
+
 }
 
 void GLWidget_2_0::resizeGL(int w, int h)
@@ -53,6 +53,8 @@ void GLWidget_2_0::paintGL()
     m_viewMatrix.lookAt(eye, center, up);
 
     // Draw Call
+    m_model->setLightPosition(QVector4D(eye,0));
+    m_model->setRotate(m_angle);
     m_model->update(m_projectionMatrix, m_viewMatrix);
     m_model->draw(m_shader);
 
@@ -88,4 +90,55 @@ void GLWidget_2_0::wheelEvent(QWheelEvent *event)
     }
 
     event->accept();
+}
+
+bool GLWidget_2_0::eventFilter(QObject *obj, QEvent *event)
+{
+    (void) obj;
+
+    switch(event->type()){
+    case QEvent::KeyPress:
+        // 回転操作
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_A)
+        {
+            m_angle.setY(m_angle.y() - 1);
+            if ( m_angle.y() < 0) m_angle.setY( 360 );
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_D)
+        {
+            m_angle.setY(m_angle.y() + 1);
+            if ( m_angle.y() > 360) m_angle.setY( 0 );
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_W)
+        {
+            m_angle.setX(m_angle.x() - 1);
+            if ( m_angle.x() < 0) m_angle.setX( 360 );
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_S)
+        {
+            m_angle.setX(m_angle.x() + 1);
+            if ( m_angle.x() > 360) m_angle.setX( 0 );
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Q)
+        {
+            m_angle.setZ(m_angle.z() - 1);
+            if ( m_angle.z() < 0) m_angle.setZ( 360 );
+        }
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_E)
+        {
+            m_angle.setZ(m_angle.z() + 1);
+            if ( m_angle.z() > 360) m_angle.setZ( 0 );
+        }
+
+        update();
+        break;
+    default:
+        break;
+    }
+
+    return false;
 }

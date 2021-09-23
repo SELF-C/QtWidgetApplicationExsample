@@ -1,4 +1,4 @@
-#version 110 core
+#version 110
 
 varying vec3 LightIntensity;
 

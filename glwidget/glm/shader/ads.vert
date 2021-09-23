@@ -1,4 +1,4 @@
-#version 110 core
+#version 110
 
 attribute vec3 VertexPosition;
 attribute vec3 VertexNormal;

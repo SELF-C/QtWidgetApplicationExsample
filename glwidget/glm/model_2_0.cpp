@@ -1,6 +1,5 @@
 #include "model_2_0.h"
-#include <QDebug>
-#include <QQuaternion>
+
 Model_2_0::Model_2_0(const QString filename)
 {
     initializeOpenGLFunctions();
@@ -48,8 +47,6 @@ void Model_2_0::update(glm::mat4 projectionMatrix, glm::mat4 viewMatrix)
 void Model_2_0::draw(GLuint m_shader)
 {
     // get locations
-    GLuint vertexLocation = static_cast<GLuint>(glGetAttribLocation(m_shader, "VertexPosition"));
-    GLuint normalLocation = static_cast<GLuint>(glGetAttribLocation(m_shader, "VertexNormal"));
     setUniformLocations(m_shader);
 
     // set uniforms
@@ -71,23 +68,20 @@ void Model_2_0::draw(GLuint m_shader)
     glUniformMatrix4fv(m_uniformLocations[UniformLocation::MVP]             , 1, GL_FALSE, glm::value_ptr(mvp));
 
     // draw
+    GLuint vertexLocation = static_cast<GLuint>(m_uniformLocations[UniformLocation::Vertex]);
+    GLuint normalLocation = static_cast<GLuint>(m_uniformLocations[UniformLocation::Normal]);
     glEnableVertexAttribArray(vertexLocation);
     glEnableVertexAttribArray(normalLocation);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
-    glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    int offset = 0;
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), nullptr);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    glVertexAttribPointer(normalLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    offset += sizeof(glm::vec3);
+    glVertexAttribPointer(normalLocation, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), reinterpret_cast<GLvoid*>(offset));
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
     glDrawElements(GL_TRIANGLES, m_indexes.size(), GL_UNSIGNED_INT, nullptr);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    glDisableVertexAttribArray(vertexLocation);
-    glDisableVertexAttribArray(normalLocation);
 }
 
 
@@ -105,7 +99,6 @@ void Model_2_0::createVertexArray(const QString filename)
 
 
     m_vertices.clear();
-    m_normals.clear();
     m_indexes.clear();
 
     QVector<QPair<glm::vec3, glm::vec3>> vertices;
@@ -122,8 +115,7 @@ void Model_2_0::createVertexArray(const QString filename)
         if( index == -1 )
         {
             vertices.append(v);
-            m_vertices.append(triangles.at(i).position1);
-            m_normals.append(triangles.at(i).normal);
+            m_vertices.append(VertexData{ triangles.at(i).position1, triangles.at(i).normal });
             m_indexes.append(static_cast<GLuint>(m_vertices.size() - 1));
         }
         else
@@ -136,8 +128,7 @@ void Model_2_0::createVertexArray(const QString filename)
         if( index == -1 )
         {
             vertices.append(v);
-            m_vertices.append(triangles.at(i).position2);
-            m_normals.append(triangles.at(i).normal);
+            m_vertices.append(VertexData{ triangles.at(i).position2, triangles.at(i).normal });
             m_indexes.append(static_cast<GLuint>(m_vertices.size() - 1));
         }
         else
@@ -150,8 +141,7 @@ void Model_2_0::createVertexArray(const QString filename)
         if( index == -1 )
         {
             vertices.append(v);
-            m_vertices.append(triangles.at(i).position3);
-            m_normals.append(triangles.at(i).normal);
+            m_vertices.append(VertexData{ triangles.at(i).position3, triangles.at(i).normal });
             m_indexes.append(static_cast<GLuint>(m_vertices.size() - 1));
         }
         else
@@ -159,16 +149,14 @@ void Model_2_0::createVertexArray(const QString filename)
             m_indexes.append(static_cast<GLuint>(index));
         }
     }
+
 }
 
 void Model_2_0::createBuffer()
 {
-    glGenBuffers(2, m_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
-    glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * static_cast<int>(sizeof(QVector3D)), m_vertices.constData(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    glBufferData(GL_ARRAY_BUFFER, m_normals.size() * static_cast<int>(sizeof(QVector3D)), m_normals.constData(), GL_STATIC_DRAW);
+    glGenBuffers(1, &m_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * static_cast<int>(sizeof(VertexData)), m_vertices.constData(), GL_STATIC_DRAW);
 
     glGenBuffers(1, &m_ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
@@ -183,6 +171,8 @@ void Model_2_0::setUniformLocations(GLuint m_shader)
     if( m_uniformLocations.isEmpty() )
     {
         m_uniformLocations = QVector<int>(UniformLocation::Count);
+        m_uniformLocations[UniformLocation::Vertex]             = glGetAttribLocation(m_shader, "VertexPosition");
+        m_uniformLocations[UniformLocation::Normal]             = glGetAttribLocation(m_shader, "VertexNormal");
         m_uniformLocations[UniformLocation::Position]           = glGetUniformLocation(m_shader, "Light.Position");
         m_uniformLocations[UniformLocation::La]                 = glGetUniformLocation(m_shader, "Light.La");
         m_uniformLocations[UniformLocation::Ld]                 = glGetUniformLocation(m_shader, "Light.Ld");

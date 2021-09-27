@@ -24,13 +24,14 @@ SOURCES += \
     model_2_0.cpp
 
 HEADERS += \
-    ShaderProgram.h \
     camera.h \
+    fps.h \
     glwidget_1_1.h \
     glwidget_2_0.h \
     mainwindow.h \
     model_1_1.h \
     model_2_0.h \
+    shaderprogram.h \
     stl.h
 
 FORMS += \

@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/shader/ads.frag</file>
+        <file>resource/shader/ads.vert</file>
+        <file>resource/shader/shader.frag</file>
+        <file>resource/shader/shader.vert</file>
+        <file>resource/stl/cube.stl</file>
+        <file>resource/stl/sphere.stl</file>
+        <file>resource/stl/suzanne.stl</file>
+    </qresource>
+</RCC>

@@ -24,7 +24,6 @@ SOURCES += \
     model_2_0.cpp
 
 HEADERS += \
-    ShaderProgram.h \
     camera.h \
     fps.h \
     glwidget_1_1.h \
@@ -32,6 +31,7 @@ HEADERS += \
     mainwindow.h \
     model_1_1.h \
     model_2_0.h \
+    shaderprogram.h \
     stl.h
 
 FORMS += \

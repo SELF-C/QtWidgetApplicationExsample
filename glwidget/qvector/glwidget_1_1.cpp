@@ -22,6 +22,8 @@ void GLWidget_1_1::initializeGL()
 
     m_angle = QVector3D(0.0f, 0.0f, 0.0f);
 
+    m_fps = new Fps();
+
     glClearColor(0,0,0,1);
 
     glEnable(GL_DEPTH_TEST);
@@ -56,6 +58,8 @@ void GLWidget_1_1::resizeGL(int w, int h)
 
 void GLWidget_1_1::paintGL()
 {
+    m_fps->measurement();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);

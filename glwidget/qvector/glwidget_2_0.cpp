@@ -15,15 +15,14 @@ void GLWidget_2_0::initializeGL()
     m_model = new Model_2_0(":/stl/suzanne.stl");
     m_camera = new Camera();
 
+    m_fps = new Fps();
+
     // clear
     glClearColor(0,0,0,1);
 
     // enabled
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    glEnable(GL_MULTISAMPLE);
-
-
 }
 
 void GLWidget_2_0::resizeGL(int w, int h)
@@ -39,6 +38,8 @@ void GLWidget_2_0::resizeGL(int w, int h)
 
 void GLWidget_2_0::paintGL()
 {
+    m_fps->measurement();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(m_shader);
@@ -58,6 +59,7 @@ void GLWidget_2_0::paintGL()
     m_model->update(m_projectionMatrix, m_viewMatrix);
     m_model->draw(m_shader);
 
+    update();
 }
 
 void GLWidget_2_0::mousePressEvent(QMouseEvent *event)

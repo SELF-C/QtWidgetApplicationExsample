@@ -43,6 +43,8 @@ private:
 
     QVector3D m_angle;
     QVector2D m_mousePosition;
+
+    Fps* m_fps;
 };
 
 #endif // GLWIDGET_1_1_H

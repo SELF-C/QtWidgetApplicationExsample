@@ -32,6 +32,12 @@ struct Material {
     GLfloat shininess;  // スペキュラ 輝き係数
 };
 
+struct VertexData
+{
+    glm::vec3 position;
+    glm::vec3 normal;
+};
+
 class Model_2_0 : protected QOpenGLFunctions_2_0
 {
 public:
@@ -54,6 +60,8 @@ protected:
 private:
     enum UniformLocation
     {
+        // Vertex
+        Vertex, Normal,
         // Light
         Position, La, Ld, Ls,
         // Material
@@ -70,10 +78,12 @@ private:
 
     glm::mat4 m_projectionMatrix, m_viewMatrix, m_modelMatrix;
     glm::vec3 m_position, m_angle, m_size;
-    QVector<glm::vec3> m_vertices, m_normals;
+
+    //QVector<glm::vec3> m_vertices, m_normals;
+    QVector<VertexData> m_vertices;
     QVector<GLuint> m_indexes;
 
-    GLuint m_vbo[2];
+    GLuint m_vbo;
     GLuint m_ibo;
 
     void createVertexArray(const QString filename);

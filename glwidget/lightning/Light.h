@@ -16,9 +16,9 @@ public:
         initializeOpenGLFunctions();
 
         m_position  = glm::vec4( 0.5f, 5.0f, 7.0f, 1.0f );
-        m_la        = glm::vec3( 0.8f );
-        m_ld        = glm::vec3( 0.5f );
-        m_ls        = glm::vec3( 0.5f );
+        m_la        = glm::vec3( 0.0f );
+        m_ld        = glm::vec3( 1.0f );
+        m_ls        = glm::vec3( 1.0f );
     }
 
     void uniform(const GLuint shader)

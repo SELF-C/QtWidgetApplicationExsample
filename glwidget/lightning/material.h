@@ -15,10 +15,10 @@ public:
     {
         initializeOpenGLFunctions();
 
-        m_ka        = glm::vec3( 0.7f );
-        m_kd        = glm::vec3( 0.6f );
-        m_ks        = glm::vec3( 0.3f );
-        m_shininess = 100;
+        m_ka        = glm::vec3( 0.2f );
+        m_kd        = glm::vec3( 0.8f );
+        m_ks        = glm::vec3( 0.0f );
+        m_shininess = 0;
     }
 
     void uniform(const GLuint shader)

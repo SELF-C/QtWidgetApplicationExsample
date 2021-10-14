@@ -49,9 +49,9 @@ void GLWidget::paintGL()
     // View
     glm::mat4 cameraMatrix = m_camera->matrix();
 
-    glm::vec3 eye    = cameraMatrix * glm::vec4(0.0f, m_camera->distance(), 0.0f, 1.0f);    // 仮想3Dカメラが配置されているポイント
+    glm::vec3 eye    = cameraMatrix * glm::vec4(0.0f, 0.0f, m_camera->distance(), 1.0f);    // 仮想3Dカメラが配置されているポイント
     glm::vec3 center = cameraMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);                    // カメラが注視するポイント（シーンの中心）
-    glm::vec3 up     = cameraMatrix * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);                    // 3Dワールドの上方向を定義
+    glm::vec3 up     = cameraMatrix * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);                    // 3Dワールドの上方向を定義
     m_viewMatrix = glm::lookAt(eye, center, up);
 
 
@@ -68,13 +68,13 @@ void GLWidget::paintGL()
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
-    m_mousePosition = glm::vec2(event->pos().x(), event->pos().y() * -1);
+    m_mousePosition = glm::vec2(event->pos().x(), event->pos().y());
     event->accept();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    glm::vec2 pos = glm::vec2(event->pos().x(), event->pos().y() * -1);
+    glm::vec2 pos = glm::vec2(event->pos().x(), event->pos().y());
 
     // マウスの右クリックドラッグでカメラ回転
     if (event->buttons() & Qt::RightButton)
